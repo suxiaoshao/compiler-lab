@@ -1,9 +1,8 @@
 mod tokenizer;
 
-use std::env;
 use colored::Colorize;
+use std::env;
 use std::fs;
-
 
 /// 清空控制台
 fn clear() {
@@ -19,7 +18,7 @@ fn read_file_chars() -> String {
             println!("{}", "未输入文件".red());
             std::process::exit(1);
         }
-        Some(v) => v
+        Some(v) => v,
     };
 
     // 读取文件
@@ -50,9 +49,9 @@ fn read_file_chars() -> String {
 }
 
 fn main() {
-    let content=read_file_chars();
-    let tokens= tokenizer::get_tokens_from_string(content);
-    tokens.iter().for_each(|x|{
-        println!("{}",x.display());
+    let content = read_file_chars();
+    let tokens = tokenizer::get_tokens_from_string(content);
+    tokens.iter().for_each(|x| {
+        println!("{}", x.display());
     })
 }

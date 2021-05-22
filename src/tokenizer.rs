@@ -1,71 +1,6 @@
-use colored::Colorize;
+use token::{Token, TokenType};
 
-/// token 的 类型
-#[derive(Clone, Copy, Debug)]
-enum TokenType {
-    Unknown,
-    // 未知类型
-    Int,
-    IntNum,
-    Real,
-    // 实数
-    RealNum,
-    Bool,
-    True,
-    False,
-    If,
-    Else,
-    For,
-    Return,
-    Break,
-    Id,
-    //标识符
-    Add,
-    Sub,
-    Mul,
-    Mod,
-    Div,
-    Assign,
-    Equal,
-    NotEqual,
-    And,
-    Or,
-    Not,
-    Greater,
-    GreaterEqual,
-    Less,
-    LessEqual,
-    Comma,
-    // ,
-    Semicolon,
-    // ;
-    LeftBlock,
-    RightBlock,
-    SqLeftBracket,
-    // [
-    SqRightBracket,
-    // ]
-    CirLeftBracket,
-    // (
-    CirRightBracket, // )
-}
-
-#[derive(Clone, Debug)]
-pub struct Token {
-    lex: String,
-    token_type: TokenType,
-}
-
-
-impl Token {
-    /// 新建一个 token
-    fn new(lex: String, token_type: TokenType) -> Self {
-        Self { lex, token_type }
-    }
-    pub fn display(&self) -> String {
-        format!("<{} {}>", format!("'{}'", self.lex).green(), format!("{:?}", self.token_type).yellow())
-    }
-}
+mod token;
 
 #[derive(Clone)]
 enum ReadTokenState {
@@ -360,7 +295,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 3 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -409,7 +363,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                     tokens.push(Token::new(nums, TokenType::Id));
                     read_token_state = ReadTokenState::Empty;
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     tokens.push(Token::new(nums, TokenType::Id));
                     read_token_state = ReadTokenState::Empty;
                     if let Some(token) = read_token_state.get_token_empty(s) {
@@ -430,7 +403,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 4 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -480,7 +472,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 2 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -536,7 +547,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 3 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -588,7 +618,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 4 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -649,7 +698,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 2 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -685,7 +753,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 3 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -737,7 +824,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 3 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
@@ -791,7 +897,26 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
                         read_token_state = ReadTokenState::Empty;
                     }
                 }
-                '%' | '+' | '*' | '-' | '/' | '(' | ')' | '[' | ']' | '{' | '}' | '<' | '>' | '=' | '!' | '&' | '|' | ';' | ',' | '0'..='9' => {
+                '%'
+                | '+'
+                | '*'
+                | '-'
+                | '/'
+                | '('
+                | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | '<'
+                | '>'
+                | '='
+                | '!'
+                | '&'
+                | '|'
+                | ';'
+                | ','
+                | '0'..='9' => {
                     if nums.len() <= 5 {
                         tokens.push(Token::new(nums, TokenType::Id));
                         read_token_state = ReadTokenState::Empty;
