@@ -73,14 +73,6 @@ impl Token {
             end: end.clone(),
         }
     }
-    pub(in crate::tokenizer) fn check_position(&mut self) {
-        if self.end.x as i32 - self.start.x as i32 == self.lex.len() as i32 {
-            self.end.back();
-        }
-        if self.end.y > self.start.y {
-            self.end.y -= 1;
-        }
-    }
     pub fn display(&self) -> String {
         format!(
             "<{} {} {}>",

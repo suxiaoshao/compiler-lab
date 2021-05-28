@@ -13,26 +13,28 @@ pub fn get_tokens_from_string(content: &str) -> Vec<Token> {
     let mut tokens = vec![];
     // 位置
     let mut position = Position::new();
+    // 之前的位置
+    let mut pre_position = Position::new();
     // 状态
     let mut read_token_state: ReadTokenState = ReadTokenState::new(&position);
     // 下标
     let mut index = 0;
     while index < chars.len() {
         let c = chars[index];
-        let (token, is_next) = read_token_state.read_char(c, &position);
+        let (token, is_next) = read_token_state.read_char(c, &position, &pre_position);
         if let Some(token) = token {
             tokens.push(token)
         }
         if is_next {
+            pre_position = position.clone();
             position.change_from_char(c);
             index += 1;
         }
     }
-    let (token, ..) = read_token_state.read_char(' ', &position);
+    let (token, ..) = read_token_state.read_char(' ', &position, &pre_position);
     if let Some(token) = token {
         tokens.push(token)
     }
-    tokens.iter_mut().for_each(|token| token.check_position());
     tokens
 }
 #[cfg(test)]
@@ -60,6 +62,9 @@ else"##;
         assert_eq!(tokens[1].token_type, TokenType::Id);
         assert_eq!(tokens[26].token_type, RealNum);
         assert_eq!(tokens[26].lex, "3.0");
+        assert_eq!(tokens[28].start, tokens[28].end);
+        assert_eq!(tokens[28].start.y, 5);
+        assert_eq!(tokens[28].start.x, 1);
         assert_eq!(tokens[36].token_type, IntNum);
         assert_eq!(tokens[58].token_type, TokenType::Id);
         assert_eq!(tokens[58].start.y, 10);

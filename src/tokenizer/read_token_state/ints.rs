@@ -11,7 +11,12 @@ pub(in crate::tokenizer) struct Int {
     value: String,
 }
 impl ReadChar for Int {
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool) {
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool) {
         let position = position.clone();
         let now_str = self.value.to_string() + &*c.to_string();
         let empty_state = ReadTokenState::Empty(Empty::new(position.clone()));
@@ -23,14 +28,14 @@ impl ReadChar for Int {
                     self.value.to_string(),
                     TokenType::Id,
                     &self.position,
-                    &position,
+                    pre_position,
                 )
             } else {
                 Token::new(
                     self.value.to_string(),
                     TokenType::Int,
                     &self.position,
-                    &position,
+                    pre_position,
                 )
             };
             return (Some(token), empty_state, false);
@@ -42,14 +47,14 @@ impl ReadChar for Int {
                         self.value.to_string(),
                         TokenType::Id,
                         &self.position,
-                        &position,
+                        pre_position,
                     )
                 } else {
                     Token::new(
                         self.value.to_string(),
                         TokenType::Int,
                         &self.position,
-                        &position,
+                        pre_position,
                     )
                 }),
                 empty_state,

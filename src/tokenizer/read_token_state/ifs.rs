@@ -10,7 +10,12 @@ pub(in crate::tokenizer) struct Ifs {
     value: String,
 }
 impl ReadChar for Ifs {
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool) {
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool) {
         let position = position.clone();
         let now_str = self.value.to_string() + &*c.to_string();
         let empty_state = ReadTokenState::Empty(Empty::new(position.clone()));
@@ -21,7 +26,7 @@ impl ReadChar for Ifs {
                     self.value.to_string(),
                     TokenType::If,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 empty_state,
                 false,
@@ -33,7 +38,7 @@ impl ReadChar for Ifs {
                     self.value.to_string(),
                     TokenType::If,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 empty_state,
                 true,

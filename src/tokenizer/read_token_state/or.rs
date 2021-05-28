@@ -8,7 +8,12 @@ pub(in crate::tokenizer) struct Or {
     position: Position,
 }
 impl ReadChar for Or {
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool) {
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool) {
         let empty = ReadTokenState::Empty(Empty::new(position.clone()));
         match c {
             ' ' | '\n' | '\r' => (
@@ -16,7 +21,7 @@ impl ReadChar for Or {
                     "|".to_string(),
                     TokenType::Unknown,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 empty,
                 true,
@@ -36,7 +41,7 @@ impl ReadChar for Or {
                     "|".to_string(),
                     TokenType::Unknown,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 empty,
                 false,

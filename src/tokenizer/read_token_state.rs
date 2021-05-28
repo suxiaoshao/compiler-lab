@@ -69,7 +69,12 @@ pub(in crate::tokenizer) enum ReadTokenState {
 /// # 状态
 pub(in crate::tokenizer::read_token_state) trait ReadChar {
     /// # 读取字符,和位置返回 token 和 状态 和 是否读取下一个字符
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool);
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool);
 }
 
 impl ReadTokenState {
@@ -77,28 +82,29 @@ impl ReadTokenState {
         &mut self,
         c: char,
         position: &Position,
+        pre_position: &Position,
     ) -> (Option<Token>, bool) {
         let (token, state, if_next) = match self {
-            ReadTokenState::Empty(e) => e.read_char(c, position),
-            ReadTokenState::Less(e) => e.read_char(c, position),
-            ReadTokenState::More(e) => e.read_char(c, position),
-            ReadTokenState::Equal(e) => e.read_char(c, position),
-            ReadTokenState::Exclamation(e) => e.read_char(c, position),
-            ReadTokenState::And(e) => e.read_char(c, position),
-            ReadTokenState::Or(e) => e.read_char(c, position),
-            ReadTokenState::IntValue(e) => e.read_char(c, position),
-            ReadTokenState::RealValue(e) => e.read_char(c, position),
-            ReadTokenState::Bool(e) => e.read_char(c, position),
-            ReadTokenState::Id(e) => e.read_char(c, position),
-            ReadTokenState::Break(e) => e.read_char(c, position),
-            ReadTokenState::Int(e) => e.read_char(c, position),
-            ReadTokenState::If(e) => e.read_char(c, position),
-            ReadTokenState::Else(e) => e.read_char(c, position),
-            ReadTokenState::False(e) => e.read_char(c, position),
-            ReadTokenState::For(e) => e.read_char(c, position),
-            ReadTokenState::True(e) => e.read_char(c, position),
-            ReadTokenState::Real(e) => e.read_char(c, position),
-            ReadTokenState::Return(e) => e.read_char(c, position),
+            ReadTokenState::Empty(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Less(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::More(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Equal(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Exclamation(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::And(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Or(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::IntValue(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::RealValue(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Bool(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Id(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Break(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Int(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::If(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Else(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::False(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::For(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::True(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Real(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::Return(e) => e.read_char(c, position, pre_position),
         };
         *self = state;
         (token, if_next)

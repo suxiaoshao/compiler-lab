@@ -10,7 +10,12 @@ pub(in crate::tokenizer) struct IntValue {
     value: String,
 }
 impl ReadChar for IntValue {
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool) {
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool) {
         let position = position.clone();
         let empty = ReadTokenState::Empty(Empty::new(position.clone()));
         match c {
@@ -35,7 +40,7 @@ impl ReadChar for IntValue {
                     self.value.to_string(),
                     TokenType::IntNum,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 empty,
                 false,

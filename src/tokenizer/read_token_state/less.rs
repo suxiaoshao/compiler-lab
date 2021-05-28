@@ -8,7 +8,12 @@ pub(in crate::tokenizer) struct Less {
     position: Position,
 }
 impl ReadChar for Less {
-    fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool) {
+    fn read_char(
+        &self,
+        c: char,
+        position: &Position,
+        pre_position: &Position,
+    ) -> (Option<Token>, ReadTokenState, bool) {
         let position = position.clone();
         match c {
             ' ' | '\n' | '\r' => (
@@ -16,7 +21,7 @@ impl ReadChar for Less {
                     "<".to_string(),
                     TokenType::Less,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
@@ -36,7 +41,7 @@ impl ReadChar for Less {
                     "<".to_string(),
                     TokenType::Less,
                     &self.position,
-                    &position,
+                    pre_position,
                 )),
                 ReadTokenState::Empty(Empty::new(position)),
                 false,

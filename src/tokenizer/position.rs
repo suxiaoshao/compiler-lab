@@ -1,4 +1,4 @@
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct Position {
     pub(in crate::tokenizer) x: u64,
     pub(in crate::tokenizer) y: u64,
@@ -10,6 +10,7 @@ impl Position {
                 self.y += 1;
                 self.x = 1
             }
+            '\r' => {}
             _ => self.x += 1,
         }
     }
@@ -18,8 +19,5 @@ impl Position {
     }
     pub fn to_string(&self) -> String {
         format!("{}:{}", self.y, self.x)
-    }
-    pub fn back(&mut self) -> () {
-        self.x -= 1;
     }
 }
