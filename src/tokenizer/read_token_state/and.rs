@@ -3,6 +3,10 @@ use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
+/// # and 状态
+///
+/// 匹配到 `&` 符号时进入这个状态
+/// 会尝试匹配 `&&` 符号
 #[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct And {
     position: Position,
@@ -47,5 +51,53 @@ impl ReadChar for And {
 impl And {
     pub(in crate::tokenizer::read_token_state) fn new(position: Position) -> Self {
         Self { position }
+    }
+}
+#[cfg(test)]
+mod test {
+    use crate::tokenizer::position::Position;
+    use crate::tokenizer::read_token_state::and::And;
+    use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
+    use crate::tokenizer::token::{Token, TokenType};
+
+    #[test]
+    fn read_char_() {
+        let position = Position::new();
+        let and = And::new(position.clone());
+        let (token, state, is_next) = and.read_char(' ', &position);
+        if let Some(Token {
+            lex, token_type, ..
+        }) = token
+        {
+            assert_eq!(lex, "&");
+            assert_eq!(TokenType::Unknown, token_type);
+        } else {
+            panic!("返回 token 错误")
+        }
+        match state {
+            ReadTokenState::Empty(_) => {}
+            _ => panic!("状态出错"),
+        }
+        assert!(is_next);
+    }
+    #[test]
+    fn read_char_and() {
+        let position = Position::new();
+        let and = And::new(position.clone());
+        let (token, state, is_next) = and.read_char('&', &position);
+        if let Some(Token {
+                        lex, token_type, ..
+                    }) = token
+        {
+            assert_eq!(lex, "&&");
+            assert_eq!(TokenType::And, token_type);
+        } else {
+            panic!("返回 token 错误")
+        }
+        match state {
+            ReadTokenState::Empty(_) => {}
+            _ => panic!("状态出错"),
+        }
+        assert!(is_next);
     }
 }

@@ -2,7 +2,7 @@ use crate::tokenizer::position::Position;
 use colored::Colorize;
 
 /// token 的 类型
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum TokenType {
     Unknown,
     // 未知类型
@@ -74,8 +74,11 @@ impl Token {
         }
     }
     pub(in crate::tokenizer) fn check_position(&mut self) {
-        if self.end.x - self.start.x == self.lex.len() as u64 {
+        if self.end.x as i32 - self.start.x as i32 == self.lex.len() as i32 {
             self.end.back();
+        }
+        if self.end.y > self.start.y {
+            self.end.y -= 1;
         }
     }
     pub fn display(&self) -> String {

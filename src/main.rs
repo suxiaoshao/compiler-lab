@@ -50,7 +50,7 @@ fn read_file_chars() -> String {
 
 fn main() {
     let content = read_file_chars();
-    let tokens = tokenizer::get_tokens_from_string(content);
+    let tokens = tokenizer::get_tokens_from_string(&content);
     tokens.iter().for_each(|x| {
         println!("{}", x.display());
     })

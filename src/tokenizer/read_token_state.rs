@@ -66,6 +66,7 @@ pub(in crate::tokenizer) enum ReadTokenState {
     Return(Returns),
 }
 
+/// # 状态
 pub(in crate::tokenizer::read_token_state) trait ReadChar {
     /// # 读取字符,和位置返回 token 和 状态 和 是否读取下一个字符
     fn read_char(&self, c: char, position: &Position) -> (Option<Token>, ReadTokenState, bool);
