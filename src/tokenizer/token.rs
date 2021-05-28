@@ -57,11 +57,6 @@ pub struct Token {
     // pub(in crate::tokenizer) start: Position,
     // pub(in crate::tokenizer) end:Position
 }
-#[derive(Clone, Debug)]
-pub struct Position {
-    pub(in crate::tokenizer) row: u32,
-    pub(in crate::tokenizer) column: u32,
-}
 
 impl Token {
     /// 新建一个 token
