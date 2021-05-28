@@ -4,7 +4,7 @@ use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Ifs {
     position: Position,
     value: String,
@@ -17,14 +17,24 @@ impl ReadChar for Ifs {
         let id_state = ReadTokenState::Id(Id::new(self.position.clone(), &now_str));
         if check_special_symbols(c) {
             return (
-                Some(Token::new(self.value.to_string(), TokenType::If)),
+                Some(Token::new(
+                    self.value.to_string(),
+                    TokenType::If,
+                    &self.position,
+                    &position,
+                )),
                 empty_state,
                 false,
             );
         };
         match c {
             ' ' | '\n' | '\r' => (
-                Some(Token::new(self.value.to_string(), TokenType::If)),
+                Some(Token::new(
+                    self.value.to_string(),
+                    TokenType::If,
+                    &self.position,
+                    &position,
+                )),
                 empty_state,
                 true,
             ),

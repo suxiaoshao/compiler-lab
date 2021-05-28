@@ -16,7 +16,7 @@ use crate::tokenizer::read_token_state::trues::Trues;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Empty {
     position: Position,
 }
@@ -27,57 +27,112 @@ impl ReadChar for Empty {
         match c {
             ' ' | '\n' | '\r' => (None, ReadTokenState::Empty(Empty::new(position)), true),
             '+' => (
-                Some(Token::new(string, TokenType::Add)),
+                Some(Token::new(
+                    string,
+                    TokenType::Add,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '*' => (
-                Some(Token::new(string, TokenType::Mul)),
+                Some(Token::new(
+                    string,
+                    TokenType::Mul,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '-' => (
-                Some(Token::new(string, TokenType::Sub)),
+                Some(Token::new(
+                    string,
+                    TokenType::Sub,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '/' => (
-                Some(Token::new(string, TokenType::Div)),
+                Some(Token::new(
+                    string,
+                    TokenType::Div,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '(' => (
-                Some(Token::new(string, TokenType::CirLeftBracket)),
+                Some(Token::new(
+                    string,
+                    TokenType::CirLeftBracket,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             ')' => (
-                Some(Token::new(string, TokenType::CirRightBracket)),
+                Some(Token::new(
+                    string,
+                    TokenType::CirRightBracket,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '[' => (
-                Some(Token::new(string, TokenType::SqLeftBracket)),
+                Some(Token::new(
+                    string,
+                    TokenType::SqLeftBracket,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             ']' => (
-                Some(Token::new(string, TokenType::SqRightBracket)),
+                Some(Token::new(
+                    string,
+                    TokenType::SqRightBracket,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '{' => (
-                Some(Token::new(string, TokenType::LeftBlock)),
+                Some(Token::new(
+                    string,
+                    TokenType::LeftBlock,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '}' => (
-                Some(Token::new(string, TokenType::RightBlock)),
+                Some(Token::new(
+                    string,
+                    TokenType::RightBlock,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
-            '%' => (
-                Some(Token::new(string, TokenType::Mod)),
+            '%' | '#' | '@' | '^' | '`' | ':' | '\\' | '\'' | '"' | '?' | '.' => (
+                Some(Token::new(
+                    string,
+                    TokenType::Unknown,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
@@ -92,12 +147,22 @@ impl ReadChar for Empty {
             '&' => (None, ReadTokenState::And(And::new(position)), true),
             '|' => (None, ReadTokenState::Or(Or::new(position)), true),
             ';' => (
-                Some(Token::new(string, TokenType::Semicolon)),
+                Some(Token::new(
+                    string,
+                    TokenType::Semicolon,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             ',' => (
-                Some(Token::new(string, TokenType::Comma)),
+                Some(Token::new(
+                    string,
+                    TokenType::Comma,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),

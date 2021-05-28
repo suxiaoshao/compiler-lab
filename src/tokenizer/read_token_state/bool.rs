@@ -5,7 +5,7 @@ use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Bool {
     position: Position,
     value: String,
@@ -17,18 +17,38 @@ impl ReadChar for Bool {
         let now_str = self.value.to_string() + &*c.to_string();
         if check_special_symbols(c) {
             let token = if self.value.len() <= 3 {
-                Token::new(self.value.to_string(), TokenType::Id)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::Id,
+                    &self.position,
+                    &position,
+                )
             } else {
-                Token::new(self.value.to_string(), TokenType::Bool)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::Bool,
+                    &self.position,
+                    &position,
+                )
             };
             return (Some(token), empty, false);
         };
         match c {
             ' ' | '\n' | '\r' => (
                 Some(if self.value.len() <= 3 {
-                    Token::new(self.value.to_string(), TokenType::Id)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::Id,
+                        &self.position,
+                        &position,
+                    )
                 } else {
-                    Token::new(self.value.to_string(), TokenType::Bool)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::Bool,
+                        &self.position,
+                        &position,
+                    )
                 }),
                 empty,
                 true,

@@ -42,7 +42,7 @@ use crate::tokenizer::read_token_state::returns::Returns;
 use crate::tokenizer::read_token_state::trues::Trues;
 use crate::tokenizer::token::Token;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) enum ReadTokenState {
     Empty(Empty),
     Less(Less),
@@ -110,6 +110,16 @@ impl ReadTokenState {
 pub(in crate::tokenizer::read_token_state) fn check_special_symbols(c: char) -> bool {
     match c {
         '%'
+        | '#'
+        | '@'
+        | '^'
+        | '`'
+        | ':'
+        | '\\'
+        | '\''
+        | '"'
+        | '?'
+        | '.'
         | '+'
         | '*'
         | '-'

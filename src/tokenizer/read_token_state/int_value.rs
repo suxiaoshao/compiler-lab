@@ -4,7 +4,7 @@ use crate::tokenizer::read_token_state::real_value::RealValue;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct IntValue {
     position: Position,
     value: String,
@@ -31,7 +31,12 @@ impl ReadChar for IntValue {
                 true,
             ),
             _ => (
-                Some(Token::new(self.value.to_string(), TokenType::IntNum)),
+                Some(Token::new(
+                    self.value.to_string(),
+                    TokenType::IntNum,
+                    &self.position,
+                    &position,
+                )),
                 empty,
                 false,
             ),

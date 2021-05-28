@@ -3,7 +3,7 @@ use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Id {
     position: Position,
     value: String,
@@ -15,16 +15,33 @@ impl ReadChar for Id {
         let now_str = self.value.to_string() + &*c.to_string();
         if check_special_symbols(c) {
             (
-                Some(Token::new(self.value.to_string(), TokenType::Id)),
+                Some(Token::new(
+                    self.value.to_string(),
+                    TokenType::Id,
+                    &self.position,
+                    &position,
+                )),
                 empty,
                 false,
             )
         } else {
-            (
-                None,
-                ReadTokenState::Id(Id::new(self.position.clone(), &now_str)),
-                true,
-            )
+            match c {
+                ' ' | '\r' | '\n' => (
+                    Some(Token::new(
+                        self.value.to_string(),
+                        TokenType::Id,
+                        &self.position,
+                        &position,
+                    )),
+                    empty,
+                    true,
+                ),
+                _ => (
+                    None,
+                    ReadTokenState::Id(Id::new(self.position.clone(), &now_str)),
+                    true,
+                ),
+            }
         }
     }
 }

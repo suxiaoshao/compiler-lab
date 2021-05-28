@@ -5,7 +5,7 @@ use crate::tokenizer::read_token_state::returns::Returns;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Real {
     position: Position,
     value: String,
@@ -17,20 +17,40 @@ impl ReadChar for Real {
         let empty_state = ReadTokenState::Empty(Empty::new(position.clone()));
         let id_state = ReadTokenState::Id(Id::new(self.position.clone(), &now_str));
         let real_state = ReadTokenState::Real(Real::new(self.position.clone(), &now_str));
-        if check_special_symbols(c) {
+        if check_special_symbols(c) && c != '.' {
             let token = if self.value.len() <= 3 {
-                Token::new(self.value.to_string(), TokenType::Id)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::Id,
+                    &self.position,
+                    &position,
+                )
             } else {
-                Token::new(self.value.to_string(), TokenType::Real)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::Real,
+                    &self.position,
+                    &position,
+                )
             };
             return (Some(token), empty_state, false);
         };
         match c {
             ' ' | '\n' | '\r' => (
                 Some(if self.value.len() <= 3 {
-                    Token::new(self.value.to_string(), TokenType::Id)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::Id,
+                        &self.position,
+                        &position,
+                    )
                 } else {
-                    Token::new(self.value.to_string(), TokenType::Real)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::Real,
+                        &self.position,
+                        &position,
+                    )
                 }),
                 empty_state,
                 true,

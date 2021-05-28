@@ -3,7 +3,7 @@ use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Less {
     position: Position,
 }
@@ -12,17 +12,32 @@ impl ReadChar for Less {
         let position = position.clone();
         match c {
             ' ' | '\n' | '\r' => (
-                Some(Token::new("<".to_string(), TokenType::Less)),
+                Some(Token::new(
+                    "<".to_string(),
+                    TokenType::Less,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             '=' => (
-                Some(Token::new("<=".to_string(), TokenType::LessEqual)),
+                Some(Token::new(
+                    "<=".to_string(),
+                    TokenType::LessEqual,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
             _ => (
-                Some(Token::new("<".to_string(), TokenType::Less)),
+                Some(Token::new(
+                    "<".to_string(),
+                    TokenType::Less,
+                    &self.position,
+                    &position,
+                )),
                 ReadTokenState::Empty(Empty::new(position)),
                 false,
             ),

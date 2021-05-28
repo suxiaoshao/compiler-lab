@@ -3,7 +3,7 @@ use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct RealValue {
     position: Position,
     value: String,
@@ -22,7 +22,12 @@ impl ReadChar for RealValue {
                 true,
             ),
             _ => (
-                Some(Token::new(self.value.to_string(), TokenType::RealNum)),
+                Some(Token::new(
+                    self.value.to_string(),
+                    TokenType::RealNum,
+                    &self.position,
+                    &position,
+                )),
                 empty,
                 false,
             ),

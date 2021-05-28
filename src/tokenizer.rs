@@ -28,5 +28,10 @@ pub fn get_tokens_from_string(content: String) -> Vec<Token> {
             index += 1;
         }
     }
+    let (token, ..) = read_token_state.read_char(' ', &position);
+    if let Some(token) = token {
+        tokens.push(token)
+    }
+    tokens.iter_mut().for_each(|token| token.check_position());
     tokens
 }

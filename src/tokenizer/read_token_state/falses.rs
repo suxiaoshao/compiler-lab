@@ -5,7 +5,7 @@ use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Falses {
     position: Position,
     value: String,
@@ -19,18 +19,38 @@ impl ReadChar for Falses {
         let false_state = ReadTokenState::False(Falses::new(self.position.clone(), &now_str));
         if check_special_symbols(c) {
             let token = if self.value.len() <= 4 {
-                Token::new(self.value.to_string(), TokenType::Id)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::Id,
+                    &self.position,
+                    &position,
+                )
             } else {
-                Token::new(self.value.to_string(), TokenType::False)
+                Token::new(
+                    self.value.to_string(),
+                    TokenType::False,
+                    &self.position,
+                    &position,
+                )
             };
             return (Some(token), empty_state, false);
         };
         match c {
             ' ' | '\n' | '\r' => (
                 Some(if self.value.len() <= 4 {
-                    Token::new(self.value.to_string(), TokenType::Id)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::Id,
+                        &self.position,
+                        &position,
+                    )
                 } else {
-                    Token::new(self.value.to_string(), TokenType::False)
+                    Token::new(
+                        self.value.to_string(),
+                        TokenType::False,
+                        &self.position,
+                        &position,
+                    )
                 }),
                 empty_state,
                 true,

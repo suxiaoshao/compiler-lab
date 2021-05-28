@@ -4,7 +4,7 @@ if (aa>=boo || false && 1) {
 }
 else{int elsee;elsee=3;}
 int intt = 44;
-real reall;
+real reall = 44.44;
 bool booll = true;
 a%b = $q
 else
