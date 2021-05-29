@@ -1,6 +1,5 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::empty::Empty;
-use crate::tokenizer::read_token_state::fors::Fors;
 use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
@@ -64,7 +63,6 @@ impl ReadChar for Falses {
                 1 => {
                     let state = match c {
                         'a' => false_state,
-                        'o' => ReadTokenState::For(Fors::new(self.position.clone(), &now_str)),
                         _ => id_state,
                     };
                     (None, state, true)

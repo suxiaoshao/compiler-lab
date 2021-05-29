@@ -1,0 +1,140 @@
+[
+    {
+        "left": "Program",
+        "right": [
+            "Block"
+        ]
+    },
+    {
+        "left": "Block",
+        "right": [
+            "{",
+            "Decls",
+            "Stmts",
+            "}"
+        ]
+    },
+    {
+        "left": "Decls",
+        "right": [
+            "Decls",
+            "Decl"
+        ]
+    },
+    {
+        "left": "Decls",
+        "right": [
+            "ε"
+        ]
+    },
+    {
+        "left": "Decl",
+        "right": [
+            "Type",
+            "id",
+            ";"
+        ]
+    },
+    {
+        "left": "Type",
+        "right": [
+            "Type",
+            "[",
+            "int_num",
+            "]"
+        ]
+    },
+    {
+        "left": "Type",
+        "right": [
+            "Type",
+            "[",
+            "real_num",
+            "]"
+        ]
+    },
+    {
+        "left": "Type",
+        "right": [
+            "int"
+        ]
+    },
+    {
+        "left": "Type",
+        "right": [
+            "real"
+        ]
+    },
+    {
+        "left": "Type",
+        "right": [
+            "bool"
+        ]
+    },
+    {
+        "left": "Stmts",
+        "right": [
+            "Stmts",
+            "Stmt"
+        ]
+    },
+    {
+        "left": "Stmts",
+        "right": [
+            "ε"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "Var",
+            "=",
+            "Bool"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "if",
+            "(",
+            "Bool",
+            ")",
+            "Stmt"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "If",
+            "(",
+            "Bool",
+            ")",
+            "Stmt",
+            "else",
+            "Stmt"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "While",
+            "(",
+            "Bool",
+            ")",
+            "Stmt"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "break",
+            ";"
+        ]
+    },
+    {
+        "left": "Stmt",
+        "right": [
+            "Block"
+        ]
+    }
+]

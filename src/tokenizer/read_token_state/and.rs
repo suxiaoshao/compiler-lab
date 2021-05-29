@@ -23,7 +23,7 @@ impl ReadChar for And {
             ' ' | '\n' | '\r' => (
                 Some(Token::new(
                     "&".to_string(),
-                    TokenType::Unknown,
+                    TokenType::Epsilon,
                     &self.position,
                     pre_position,
                 )),
@@ -43,7 +43,7 @@ impl ReadChar for And {
             _ => (
                 Some(Token::new(
                     "&".to_string(),
-                    TokenType::Unknown,
+                    TokenType::Epsilon,
                     &self.position,
                     pre_position,
                 )),
@@ -75,7 +75,7 @@ mod test {
         }) = token
         {
             assert_eq!(lex, "&");
-            assert_eq!(TokenType::Unknown, token_type);
+            assert_eq!(TokenType::Epsilon, token_type);
         } else {
             panic!("返回 token 错误")
         }

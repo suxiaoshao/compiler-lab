@@ -4,7 +4,7 @@ use token::Token;
 
 mod position;
 mod read_token_state;
-mod token;
+pub mod token;
 
 pub fn get_tokens_from_string(content: &str) -> Vec<Token> {
     // 字符向量

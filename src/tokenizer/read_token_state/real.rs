@@ -1,7 +1,6 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::id::Id;
-use crate::tokenizer::read_token_state::returns::Returns;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::{Token, TokenType};
 
@@ -69,13 +68,7 @@ impl ReadChar for Real {
                     (None, state, true)
                 }
                 2 => {
-                    let state = if c == 'a' {
-                        real_state
-                    } else if c == 't' {
-                        ReadTokenState::Return(Returns::new(self.position.clone(), &now_str))
-                    } else {
-                        id_state
-                    };
+                    let state = if c == 'a' { real_state } else { id_state };
                     (None, state, true)
                 }
                 3 => {

@@ -6,7 +6,6 @@ mod empty;
 mod equal;
 mod exclamation;
 mod falses;
-mod fors;
 mod id;
 mod ifs;
 mod int_value;
@@ -16,7 +15,6 @@ mod more;
 mod or;
 mod real;
 mod real_value;
-mod returns;
 mod trues;
 
 use crate::tokenizer::position::Position;
@@ -28,7 +26,6 @@ use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::equal::Equal;
 use crate::tokenizer::read_token_state::exclamation::Exclamation;
 use crate::tokenizer::read_token_state::falses::Falses;
-use crate::tokenizer::read_token_state::fors::Fors;
 use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::ifs::Ifs;
 use crate::tokenizer::read_token_state::int_value::IntValue;
@@ -38,7 +35,6 @@ use crate::tokenizer::read_token_state::more::More;
 use crate::tokenizer::read_token_state::or::Or;
 use crate::tokenizer::read_token_state::real::Real;
 use crate::tokenizer::read_token_state::real_value::RealValue;
-use crate::tokenizer::read_token_state::returns::Returns;
 use crate::tokenizer::read_token_state::trues::Trues;
 use crate::tokenizer::token::Token;
 
@@ -60,10 +56,8 @@ pub(in crate::tokenizer) enum ReadTokenState {
     If(Ifs),
     Else(Elses),
     False(Falses),
-    For(Fors),
     True(Trues),
     Real(Real),
-    Return(Returns),
 }
 
 /// # 状态
@@ -101,10 +95,8 @@ impl ReadTokenState {
             ReadTokenState::If(e) => e.read_char(c, position, pre_position),
             ReadTokenState::Else(e) => e.read_char(c, position, pre_position),
             ReadTokenState::False(e) => e.read_char(c, position, pre_position),
-            ReadTokenState::For(e) => e.read_char(c, position, pre_position),
             ReadTokenState::True(e) => e.read_char(c, position, pre_position),
             ReadTokenState::Real(e) => e.read_char(c, position, pre_position),
-            ReadTokenState::Return(e) => e.read_char(c, position, pre_position),
         };
         *self = state;
         (token, if_next)

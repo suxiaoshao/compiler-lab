@@ -19,7 +19,7 @@ impl ReadChar for Or {
             ' ' | '\n' | '\r' => (
                 Some(Token::new(
                     "|".to_string(),
-                    TokenType::Unknown,
+                    TokenType::Epsilon,
                     &self.position,
                     pre_position,
                 )),
@@ -39,7 +39,7 @@ impl ReadChar for Or {
             _ => (
                 Some(Token::new(
                     "|".to_string(),
-                    TokenType::Unknown,
+                    TokenType::Epsilon,
                     &self.position,
                     pre_position,
                 )),
