@@ -1,17 +1,16 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::id::Id;
-use crate::tokenizer::read_token_state::ifs::Ifs;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
 use crate::tokenizer::token::Token;
 use crate::tokenizer::token_type::TokenType;
 
 #[derive(Clone, Debug)]
-pub(in crate::tokenizer) struct Int {
+pub(in crate::tokenizer) struct Whiles {
     position: Position,
     value: String,
 }
-impl ReadChar for Int {
+impl ReadChar for Whiles {
     fn read_char(
         &self,
         c: char,
@@ -22,9 +21,9 @@ impl ReadChar for Int {
         let now_str = self.value.to_string() + &*c.to_string();
         let empty_state = ReadTokenState::Empty(Empty::new(position.clone()));
         let id_state = ReadTokenState::Id(Id::new(self.position.clone(), &now_str));
-        let int_state = ReadTokenState::Int(Int::new(self.position.clone(), &now_str));
+        let false_state = ReadTokenState::While(Whiles::new(self.position.clone(), &now_str));
         if check_special_symbols(c) {
-            let token = if self.value.len() <= 2 {
+            let token = if self.value.len() <= 4 {
                 Token::new(
                     self.value.to_string(),
                     TokenType::Id,
@@ -34,7 +33,7 @@ impl ReadChar for Int {
             } else {
                 Token::new(
                     self.value.to_string(),
-                    TokenType::Int,
+                    TokenType::While,
                     &self.position,
                     pre_position,
                 )
@@ -43,7 +42,7 @@ impl ReadChar for Int {
         };
         match c {
             ' ' | '\n' | '\r' => (
-                Some(if self.value.len() <= 2 {
+                Some(if self.value.len() <= 5 {
                     Token::new(
                         self.value.to_string(),
                         TokenType::Id,
@@ -53,7 +52,7 @@ impl ReadChar for Int {
                 } else {
                     Token::new(
                         self.value.to_string(),
-                        TokenType::Int,
+                        TokenType::While,
                         &self.position,
                         pre_position,
                     )
@@ -64,23 +63,30 @@ impl ReadChar for Int {
             _ => match self.value.len() {
                 1 => {
                     let state = match c {
-                        'n' => int_state,
-                        'f' => ReadTokenState::If(Ifs::new(self.position.clone(), &now_str)),
+                        'h' => false_state,
                         _ => id_state,
                     };
                     (None, state, true)
                 }
                 2 => {
-                    let state = if c == 't' { int_state } else { id_state };
+                    let state = if c == 'i' { false_state } else { id_state };
                     (None, state, true)
                 }
-                3 => (None, id_state, true),
+                3 => {
+                    let state = if c == 'l' { false_state } else { id_state };
+                    (None, state, true)
+                }
+                4 => {
+                    let state = if c == 'e' { false_state } else { id_state };
+                    (None, state, true)
+                }
+                5 => (None, id_state, true),
                 _ => panic!("解析 bool 出错"),
             },
         }
     }
 }
-impl Int {
+impl Whiles {
     pub(in crate::tokenizer::read_token_state) fn new(position: Position, value: &str) -> Self {
         Self {
             position,

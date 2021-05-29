@@ -1,22 +1,3 @@
-mod and;
-mod bool;
-mod breaks;
-mod elses;
-mod empty;
-mod equal;
-mod exclamation;
-mod falses;
-mod id;
-mod ifs;
-mod int_value;
-mod ints;
-mod less;
-mod more;
-mod or;
-mod real;
-mod real_value;
-mod trues;
-
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::and::And;
 use crate::tokenizer::read_token_state::bool::Bool;
@@ -36,7 +17,28 @@ use crate::tokenizer::read_token_state::or::Or;
 use crate::tokenizer::read_token_state::real::Real;
 use crate::tokenizer::read_token_state::real_value::RealValue;
 use crate::tokenizer::read_token_state::trues::Trues;
+use crate::tokenizer::read_token_state::whiles::Whiles;
 use crate::tokenizer::token::Token;
+
+mod and;
+mod bool;
+mod breaks;
+mod elses;
+mod empty;
+mod equal;
+mod exclamation;
+mod falses;
+mod id;
+mod ifs;
+mod int_value;
+mod ints;
+mod less;
+mod more;
+mod or;
+mod real;
+mod real_value;
+mod trues;
+mod whiles;
 
 #[derive(Clone, Debug)]
 pub(in crate::tokenizer) enum ReadTokenState {
@@ -58,6 +60,7 @@ pub(in crate::tokenizer) enum ReadTokenState {
     False(Falses),
     True(Trues),
     Real(Real),
+    While(Whiles),
 }
 
 /// # 状态
@@ -97,6 +100,7 @@ impl ReadTokenState {
             ReadTokenState::False(e) => e.read_char(c, position, pre_position),
             ReadTokenState::True(e) => e.read_char(c, position, pre_position),
             ReadTokenState::Real(e) => e.read_char(c, position, pre_position),
+            ReadTokenState::While(e) => e.read_char(c, position, pre_position),
         };
         *self = state;
         (token, if_next)

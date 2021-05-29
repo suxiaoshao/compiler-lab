@@ -5,6 +5,7 @@ use token::Token;
 mod position;
 mod read_token_state;
 pub mod token;
+pub mod token_type;
 
 pub fn get_tokens_from_string(content: &str) -> Vec<Token> {
     // 字符向量
@@ -40,8 +41,8 @@ pub fn get_tokens_from_string(content: &str) -> Vec<Token> {
 #[cfg(test)]
 mod test {
     use crate::tokenizer::get_tokens_from_string;
-    use crate::tokenizer::token::TokenType;
-    use crate::tokenizer::token::TokenType::{IntNum, RealNum};
+    use crate::tokenizer::token_type::TokenType;
+    use crate::tokenizer::token_type::TokenType::{IntNum, RealNum};
 
     #[test]
     fn get_tokens_test() {

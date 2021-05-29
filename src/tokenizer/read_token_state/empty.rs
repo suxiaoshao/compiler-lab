@@ -13,8 +13,11 @@ use crate::tokenizer::read_token_state::more::More;
 use crate::tokenizer::read_token_state::or::Or;
 use crate::tokenizer::read_token_state::real::Real;
 use crate::tokenizer::read_token_state::trues::Trues;
+use crate::tokenizer::read_token_state::whiles::Whiles;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
-use crate::tokenizer::token::{Token, TokenType};
+use crate::tokenizer::token::Token;
+use crate::tokenizer::token_type::TokenType;
+
 #[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Empty {
     position: Position,
@@ -110,7 +113,7 @@ impl ReadChar for Empty {
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
-            '%' | '#' | '@' | '^' | '`' | ':' | '\\' | '\'' | '"' | '?' | '.'|',' => (
+            '%' | '#' | '@' | '^' | '`' | ':' | '\\' | '\'' | '"' | '?' | '.' | ',' => (
                 Some(Token::new(string, TokenType::Epsilon, &position, &position)),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
@@ -143,6 +146,11 @@ impl ReadChar for Empty {
             'b' => (
                 None,
                 ReadTokenState::Bool(Bool::new(position, &string)),
+                true,
+            ),
+            'w' => (
+                None,
+                ReadTokenState::While(Whiles::new(position, &string)),
                 true,
             ),
             'i' => (None, ReadTokenState::Int(Int::new(position, &string)), true),

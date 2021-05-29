@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 /// # 非终结符
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, PartialOrd, Ord)]
 pub enum NonTerminator {
     Program,
     Block,

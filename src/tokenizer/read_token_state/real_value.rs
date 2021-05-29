@@ -1,7 +1,8 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
-use crate::tokenizer::token::{Token, TokenType};
+use crate::tokenizer::token::Token;
+use crate::tokenizer::token_type::TokenType;
 
 #[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct RealValue {

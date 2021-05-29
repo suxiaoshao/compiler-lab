@@ -3,7 +3,8 @@ use crate::tokenizer::read_token_state::breaks::Breaks;
 use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::id::Id;
 use crate::tokenizer::read_token_state::{check_special_symbols, ReadChar, ReadTokenState};
-use crate::tokenizer::token::{Token, TokenType};
+use crate::tokenizer::token::Token;
+use crate::tokenizer::token_type::TokenType;
 
 #[derive(Clone, Debug)]
 pub(in crate::tokenizer) struct Bool {

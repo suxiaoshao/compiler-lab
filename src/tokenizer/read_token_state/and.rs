@@ -1,7 +1,8 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::read_token_state::empty::Empty;
 use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
-use crate::tokenizer::token::{Token, TokenType};
+use crate::tokenizer::token::Token;
+use crate::tokenizer::token_type::TokenType;
 
 /// # and 状态
 ///
@@ -63,7 +64,8 @@ mod test {
     use crate::tokenizer::position::Position;
     use crate::tokenizer::read_token_state::and::And;
     use crate::tokenizer::read_token_state::{ReadChar, ReadTokenState};
-    use crate::tokenizer::token::{Token, TokenType};
+    use crate::tokenizer::token::Token;
+    use crate::tokenizer::token_type::TokenType;
 
     #[test]
     fn read_char_() {
