@@ -6,7 +6,7 @@ use serde::Deserialize;
 use crate::parser::non_terminator::NonTerminator;
 use crate::tokenizer::token_type::TokenType;
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Ord, PartialOrd)]
 pub struct Production {
     pub(in crate::parser) left: NonTerminator,
     pub(in crate::parser) right: Vec<ProductionRight>,
@@ -39,7 +39,7 @@ impl Production {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Ord, PartialOrd)]
 #[serde(untagged)]
 pub enum ProductionRight {
     NonTerminator(NonTerminator),
