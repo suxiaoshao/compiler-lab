@@ -1,12 +1,16 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
+use std::collections::VecDeque;
 
 use colored::Colorize;
 
+use crate::parser::canonical_collection::CanonicalCollection;
+use crate::parser::lr1::LR1Set;
 use crate::parser::non_terminator::NonTerminator;
 use crate::parser::production::Production;
 use crate::tokenizer::token_type::TokenType;
 
+use super::lr1::LR1Item;
 use super::production::ProductionRight;
 
 /// 语法结构
@@ -20,6 +24,7 @@ pub struct Grammar {
     first_set: BTreeMap<NonTerminator, BTreeSet<TokenType>>,
 }
 impl Grammar {
+    /// 新建一个 grammar
     pub(in crate::parser) fn new(productions: Vec<Production>) -> Grammar {
         let nullable_set = get_nullable_set(&productions);
         let first_set = get_first_set(&productions, &nullable_set);
@@ -29,6 +34,7 @@ impl Grammar {
             first_set,
         }
     }
+    /// 显示 grammar
     pub fn show(&self) {
         println!("\nNULLABLE集");
         let nullable_str = self
@@ -43,6 +49,91 @@ impl Grammar {
                 .fold(String::new(), |x, y| format!("{} {}", x, y.show_string()));
             println!("{} {{{} }}", format!("{:?}", x).yellow(), right.cyan())
         })
+    }
+    /// 构建DFA和项目集规范族  
+    pub(crate) fn dfa(&self) -> CanonicalCollection {
+        // 新建项目集
+        let mut cc = CanonicalCollection::new();
+        // 待扩展队列
+        let mut shift_queue = VecDeque::new();
+        // 构建初始项目集
+        let start_item = LR1Item::new(&self.productions[0], 0, &TokenType::Eof);
+        let mut i0 = LR1Set::new(&vec![start_item]);
+        i0.closure(&self.first_set, &self.nullable_set, &self.productions);
+        // 加入初始项目集
+        cc.item_sets.push(i0.clone());
+        // 把新加入的有效项目集加入待扩展队列中
+        shift_queue.push_back((i0.clone(), 0));
+        while let Some(queue_item) = shift_queue.pop_front() {
+            // 取出队首元素
+            let (src, src_index) = queue_item.clone();
+            // 遍历每个终结符
+            for token in TokenType::get_all_vec() {
+                let next_set = src.go(
+                    ProductionRight::Terminator(token),
+                    &self.first_set,
+                    &self.nullable_set,
+                    &self.productions,
+                );
+                if next_set.items.len() > 0 {
+                    match cc.find_index(&next_set) {
+                        // 原有的项目集
+                        Some(pos) => {
+                            cc.graph_push_back(
+                                (ProductionRight::Terminator(token), pos),
+                                src_index,
+                            );
+                        }
+                        // 如果有新的项目集
+                        None => {
+                            let index = cc.item_sets.len();
+                            cc.item_sets.push(next_set.clone());
+                            // 把新加入的有效项目集加入待扩展队列中
+                            shift_queue.push_back((next_set.clone(), index));
+                            // srcIndex，吃了grammar.T[i]，到达index
+                            cc.graph_push_back(
+                                (ProductionRight::Terminator(token), index),
+                                src_index,
+                            );
+                        }
+                    }
+                }
+            }
+            // 遍历每个非终结符
+            for token in NonTerminator::get_all_vec() {
+                let next_set = src.go(
+                    ProductionRight::NonTerminator(token),
+                    &self.first_set,
+                    &self.nullable_set,
+                    &self.productions,
+                );
+                if next_set.items.len() > 0 {
+                    match cc.find_index(&next_set) {
+                        // 原有的项目集
+                        Some(pos) => {
+                            cc.graph_push_back(
+                                (ProductionRight::NonTerminator(token), pos),
+                                src_index,
+                            );
+                        }
+                        // 如果有新的项目集
+                        None => {
+                            let index = cc.item_sets.len();
+                            cc.item_sets.push(next_set.clone());
+                            // 把新加入的有效项目集加入待扩展队列中
+                            shift_queue.push_back((next_set.clone(), index));
+                            // srcIndex，吃了grammar.T[i]，到达index
+                            cc.graph_push_back(
+                                (ProductionRight::NonTerminator(token), index),
+                                src_index,
+                            );
+                        }
+                    }
+                }
+            }
+            println!("{}", shift_queue.len());
+        }
+        cc
     }
 }
 

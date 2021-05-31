@@ -1,6 +1,7 @@
 use crate::parser::grammar::Grammar;
 use crate::parser::production::Production;
 
+mod canonical_collection;
 mod grammar;
 mod lr1;
 mod non_terminator;
@@ -15,4 +16,6 @@ pub fn parser(parser_content: &str) {
         .for_each(|i| println!("{}", i.show_string()));
     let grammar = Grammar::new(productions);
     grammar.show();
+    let cc = grammar.dfa();
+    println!("{:?}", cc.graph.len());
 }
