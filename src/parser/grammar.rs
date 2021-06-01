@@ -131,7 +131,6 @@ impl Grammar {
                     }
                 }
             }
-            println!("{}", shift_queue.len());
         }
         cc
     }

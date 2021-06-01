@@ -67,17 +67,16 @@ impl LR1Item {
                     return first;
                 }
                 ProductionRight::NonTerminator(non_t) => {
-                    if let Some(s) = first_set.get(non_t) {
-                        for i in s {
-                            // 插入不为空的
-                            if let &TokenType::Epsilon = i {
-                                first.insert(i.clone());
-                            }
-                        }
-                        // 该非终结符不在nullable内
-                        if nullable_set.contains(non_t) {
-                            return first;
-                        }
+                    let s = &first_set[non_t];
+                    // 插入不为空的
+                    s.iter()
+                        .filter(|i| *i != &TokenType::Epsilon)
+                        .for_each(|i| {
+                            first.insert(i.clone());
+                        });
+                    // 该非终结符不在nullable内
+                    if !nullable_set.contains(non_t) {
+                        return first;
                     }
                     loc += 1;
                 }
@@ -88,10 +87,17 @@ impl LR1Item {
     }
 }
 /// # LR1 集合
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug)]
 pub(in crate) struct LR1Set {
     pub(in crate::parser) items: Vec<LR1Item>,
 }
+impl PartialEq for LR1Set {
+    fn eq(&self, other: &Self) -> bool {
+        self.items.iter().all(|item| other.items.contains(item))
+            && self.items.len() == other.items.len()
+    }
+}
+impl Eq for LR1Set {}
 impl LR1Set {
     /// 新建
     pub(in crate::parser) fn new(item: &Vec<LR1Item>) -> Self {
@@ -111,13 +117,16 @@ impl LR1Set {
             let size = self.items.len();
             for item in &self.items.clone()[cnt..] {
                 // 获取闭包
-                let new_items = item.closure(first_set, nullable_set, props);
+                let new_items: Vec<LR1Item> = item
+                    .closure(first_set, nullable_set, props)
+                    .iter()
+                    .filter(|item| !self.items.contains(&item))
+                    .map(|x| x.clone())
+                    .collect();
                 // 插入新的项目
-                for item in new_items {
-                    if let None = self.items.iter().position(|x| x == &item) {
-                        self.items.push(item)
-                    }
-                }
+                new_items
+                    .iter()
+                    .for_each(|item| self.items.push(item.clone()));
             }
             cnt += 1;
             if self.items.len() == size {

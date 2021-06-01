@@ -34,10 +34,10 @@ impl NonTerminator {
     pub(in crate::parser) fn get_items_by_n(
         &self,
         first: &BTreeSet<TokenType>,
-        props: &Vec<Production>,
+        propd: &Vec<Production>,
     ) -> Vec<LR1Item> {
         let mut items = vec![];
-        props
+        propd
             .iter()
             .filter(|prop| *self == prop.left)
             .for_each(|prop| {

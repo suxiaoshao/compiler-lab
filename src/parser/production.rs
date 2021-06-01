@@ -6,11 +6,21 @@ use serde::Deserialize;
 use crate::parser::non_terminator::NonTerminator;
 use crate::tokenizer::token_type::TokenType;
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Ord, PartialOrd)]
+#[derive(Clone, Debug, Deserialize, Ord, PartialOrd)]
 pub struct Production {
     pub(in crate::parser) left: NonTerminator,
     pub(in crate::parser) right: Vec<ProductionRight>,
 }
+
+impl PartialEq for Production {
+    fn eq(&self, other: &Self) -> bool {
+        if self.left != other.left {
+            return false;
+        };
+        self.right == other.right
+    }
+}
+impl Eq for Production {}
 
 impl Production {
     /// 返回显示的字符串
@@ -56,7 +66,13 @@ impl ProductionRight {
 
 #[cfg(test)]
 mod test {
-    use crate::parser::production::Production;
+    use crate::{
+        parser::{
+            non_terminator::NonTerminator,
+            production::{Production, ProductionRight},
+        },
+        tokenizer::token_type::TokenType,
+    };
 
     #[test]
     fn test() {
@@ -72,5 +88,32 @@ mod test {
 ]"##;
         let result: Vec<Production> = serde_json::from_str(string_s).unwrap();
         println!("{:?}", result);
+    }
+    #[test]
+    fn eq() {
+        let left = Production {
+            left: crate::parser::non_terminator::NonTerminator::Block,
+            right: vec![
+                ProductionRight::NonTerminator(NonTerminator::Factor),
+                ProductionRight::Terminator(TokenType::Assign),
+            ],
+        };
+        let right = Production {
+            left: crate::parser::non_terminator::NonTerminator::Block,
+            right: vec![
+                ProductionRight::NonTerminator(NonTerminator::Factor),
+                ProductionRight::Terminator(TokenType::Assign),
+            ],
+        };
+        assert_eq!(left, right);
+        let right = Production {
+            left: crate::parser::non_terminator::NonTerminator::Block,
+            right: vec![
+                ProductionRight::NonTerminator(NonTerminator::Factor),
+                ProductionRight::Terminator(TokenType::Assign),
+                ProductionRight::NonTerminator(NonTerminator::Program),
+            ],
+        };
+        assert_ne!(left, right);
     }
 }

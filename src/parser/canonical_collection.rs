@@ -25,7 +25,7 @@ impl CanonicalCollection {
     }
     /// 判断是否在项目集规范族中，若在返回序号
     pub(in crate::parser) fn find_index(&self, is: &LR1Set) -> Option<usize> {
-        self.item_sets.iter().position(|item| item == is)
+        self.item_sets.iter().position(|item| is == item)
     }
     /// 在指定位置添加数据
     pub(in crate::parser) fn graph_push_back(
