@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 
 use crate::tokenizer::token_type::TokenType::{
-    Add, And, Assign, Bool, Break, CirLeftBracket, CirRightBracket, Div, Else, Eof, Epsilon, Equal,
-    False, Greater, GreaterEqual, Id, If, Int, IntNum, LeftBlock, Less, LessEqual, Mul, Not,
+    Add, And, Assign, Bool, Break, CirLeftBracket, CirRightBracket, Comma, Div, Else, Eof, Epsilon,
+    Equal, False, Greater, GreaterEqual, Id, If, Int, IntNum, LeftBlock, Less, LessEqual, Mul, Not,
     NotEqual, Or, Real, RealNum, RightBlock, Semicolon, SqLeftBracket, SqRightBracket, Sub, True,
     While,
 };
 
 /// token 的 类型
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize, Hash)]
 pub enum TokenType {
     #[serde(rename = "ε")]
     Epsilon = 0, // 未知类型
@@ -79,7 +79,9 @@ pub enum TokenType {
     #[serde(rename = "while")]
     While,
     #[serde(rename = "$")]
-    Eof, // $
+    Eof, // $,
+    #[serde(rename = ",")]
+    Comma,
 }
 
 impl TokenType {
@@ -124,6 +126,7 @@ impl TokenType {
             CirRightBracket,
             While,
             Eof,
+            Comma,
         ]
     }
 }

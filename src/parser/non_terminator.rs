@@ -1,13 +1,13 @@
-use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 use serde::Deserialize;
 
 use crate::tokenizer::token_type::TokenType;
 
-use super::{lr1::LR1Item, production::Production};
+use super::{lr1_item::LR1Item, production::Production};
 
 /// # 非终结符
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Hash)]
 pub enum NonTerminator {
     Program,
     Block,
@@ -33,7 +33,7 @@ impl NonTerminator {
     /// `first`: symbol后的符号求出来的first集
     pub(in crate::parser) fn get_items_by_n(
         &self,
-        first: &BTreeSet<TokenType>,
+        first: &HashSet<TokenType>,
         propd: &Vec<Production>,
     ) -> Vec<LR1Item> {
         let mut items = vec![];

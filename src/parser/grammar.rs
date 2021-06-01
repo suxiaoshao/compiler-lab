@@ -1,27 +1,26 @@
-use std::collections::BTreeMap;
-use std::collections::BTreeSet;
-use std::collections::VecDeque;
+use std::collections::HashSet;
+use std::collections::{HashMap, LinkedList};
 
 use colored::Colorize;
 
 use crate::parser::canonical_collection::CanonicalCollection;
-use crate::parser::lr1::LR1Set;
+use crate::parser::lr1_item_set::LR1ItemSet;
 use crate::parser::non_terminator::NonTerminator;
 use crate::parser::production::Production;
 use crate::tokenizer::token_type::TokenType;
 
-use super::lr1::LR1Item;
+use super::lr1_item::LR1Item;
 use super::production::ProductionRight;
 
 /// 语法结构
 #[derive(Debug, Clone)]
 pub struct Grammar {
     /// 产生式
-    productions: Vec<Production>,
+    pub(in crate::parser) productions: Vec<Production>,
     /// NULLABLE集(可能会推导出ε的非终结符)
-    nullable_set: BTreeSet<NonTerminator>,
+    nullable_set: HashSet<NonTerminator>,
     /// first 集
-    first_set: BTreeMap<NonTerminator, BTreeSet<TokenType>>,
+    first_set: HashMap<NonTerminator, HashSet<TokenType>>,
 }
 impl Grammar {
     /// 新建一个 grammar
@@ -55,10 +54,10 @@ impl Grammar {
         // 新建项目集
         let mut cc = CanonicalCollection::new();
         // 待扩展队列
-        let mut shift_queue = VecDeque::new();
+        let mut shift_queue = LinkedList::new();
         // 构建初始项目集
         let start_item = LR1Item::new(&self.productions[0], 0, &TokenType::Eof);
-        let mut i0 = LR1Set::new(&vec![start_item]);
+        let mut i0 = LR1ItemSet::new(&vec![start_item]);
         i0.closure(&self.first_set, &self.nullable_set, &self.productions);
         // 加入初始项目集
         cc.item_sets.push(i0.clone());
@@ -137,8 +136,8 @@ impl Grammar {
 }
 
 /// 求NULLABLE集
-fn get_nullable_set(productions: &Vec<Production>) -> BTreeSet<NonTerminator> {
-    let mut nullable_set = BTreeSet::new();
+fn get_nullable_set(productions: &Vec<Production>) -> HashSet<NonTerminator> {
+    let mut nullable_set = HashSet::new();
     loop {
         let len = nullable_set.len();
         for production in productions {
@@ -157,31 +156,31 @@ fn get_nullable_set(productions: &Vec<Production>) -> BTreeSet<NonTerminator> {
 /// 初始化FIRST集
 fn get_first_set(
     productions: &Vec<Production>,
-    nullable_set: &BTreeSet<NonTerminator>,
-) -> BTreeMap<NonTerminator, BTreeSet<TokenType>> {
+    nullable_set: &HashSet<NonTerminator>,
+) -> HashMap<NonTerminator, HashSet<TokenType>> {
     // 初始化 first集
-    let mut first_set: BTreeMap<NonTerminator, BTreeSet<TokenType>> = BTreeMap::new();
+    let mut first_set: HashMap<NonTerminator, HashSet<TokenType>> = HashMap::new();
     // first 插入数据
-    let add = move |first_set: &mut BTreeMap<NonTerminator, BTreeSet<TokenType>>,
+    let add = move |first_set: &mut HashMap<NonTerminator, HashSet<TokenType>>,
                     left: &NonTerminator,
                     right: &TokenType| {
         if first_set.contains_key(left) {
             let left_value = first_set.get_mut(&left).unwrap();
             left_value.insert(right.clone());
         } else {
-            let mut left_value = BTreeSet::new();
+            let mut left_value = HashSet::new();
             left_value.insert(right.clone());
             first_set.insert(left.clone(), left_value);
         }
     };
 
     // 集合联合
-    let union_set = move |first_set: &mut BTreeMap<NonTerminator, BTreeSet<TokenType>>,
+    let union_set = move |first_set: &mut HashMap<NonTerminator, HashSet<TokenType>>,
                           left: &NonTerminator,
                           other: &NonTerminator| {
         let other = match first_set.get(other) {
             Some(o) => o.clone(),
-            None => BTreeSet::new(),
+            None => HashSet::new(),
         };
         match first_set.get_mut(left) {
             Some(l) => {
@@ -193,7 +192,7 @@ fn get_first_set(
         }
     };
     // 获取 first 集元素长度
-    let get_len = |first_set: &BTreeMap<NonTerminator, BTreeSet<TokenType>>| {
+    let get_len = |first_set: &HashMap<NonTerminator, HashSet<TokenType>>| {
         first_set.iter().fold(0, |x, (_, y)| x + y.len())
     };
     loop {

@@ -1,9 +1,12 @@
 use crate::parser::grammar::Grammar;
 use crate::parser::production::Production;
 
+mod action;
 mod canonical_collection;
+mod goto;
 mod grammar;
-mod lr1;
+mod lr1_item;
+mod lr1_item_set;
 mod non_terminator;
 mod production;
 
@@ -17,5 +20,6 @@ pub fn parser(parser_content: &str) {
     let grammar = Grammar::new(productions);
     grammar.show();
     let cc = grammar.dfa();
-    println!("{:?}", cc.graph.len());
+    println!("{:?}", cc.item_sets.len());
+    let (action, goto) = cc.build_predict_table(&grammar.productions);
 }

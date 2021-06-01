@@ -77,19 +77,20 @@
             "Stmts",
             "Stmt"
         ]
-    }
-,{
-    "left": "Stmts",
-    "right": [
-        "ε"
-    ]
-},
+    },
+    {
+        "left": "Stmts",
+        "right": [
+            "ε"
+        ]
+    },
     {
         "left": "Stmt",
         "right": [
             "Var",
             "=",
-            "Bool"
+            "Bool",
+            ";"
         ]
     },
     {

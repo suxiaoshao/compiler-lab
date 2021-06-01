@@ -113,7 +113,12 @@ impl ReadChar for Empty {
                 ReadTokenState::Empty(Empty::new(position)),
                 true,
             ),
-            '%' | '#' | '@' | '^' | '`' | ':' | '\\' | '\'' | '"' | '?' | '.' | ',' => (
+            ',' => (
+                Some(Token::new(string, TokenType::Comma, &position, &position)),
+                ReadTokenState::Empty(Empty::new(position)),
+                true,
+            ),
+            '%' | '#' | '@' | '^' | '`' | ':' | '\\' | '\'' | '"' | '?' | '.' => (
                 Some(Token::new(string, TokenType::Epsilon, &position, &position)),
                 ReadTokenState::Empty(Empty::new(position)),
                 true,

@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 use colored::{ColoredString, Colorize};
 use serde::Deserialize;
@@ -6,7 +6,7 @@ use serde::Deserialize;
 use crate::parser::non_terminator::NonTerminator;
 use crate::tokenizer::token_type::TokenType;
 
-#[derive(Clone, Debug, Deserialize, Ord, PartialOrd)]
+#[derive(Clone, Debug, Deserialize, Hash)]
 pub struct Production {
     pub(in crate::parser) left: NonTerminator,
     pub(in crate::parser) right: Vec<ProductionRight>,
@@ -40,7 +40,7 @@ impl Production {
     }
     pub(in crate::parser) fn is_next_nullable(
         &self,
-        nullable_set: &BTreeSet<NonTerminator>,
+        nullable_set: &HashSet<NonTerminator>,
     ) -> bool {
         self.right.iter().all(|item| match item {
             ProductionRight::NonTerminator(non) => nullable_set.contains(non),
@@ -49,7 +49,7 @@ impl Production {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Hash)]
 #[serde(untagged)]
 pub enum ProductionRight {
     NonTerminator(NonTerminator),
