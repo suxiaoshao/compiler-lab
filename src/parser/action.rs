@@ -10,7 +10,7 @@ use super::canonical_collection::CanonicalCollection;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub(in crate::parser) enum ActionType {
     /// 接受
-    Accept(usize),
+    Accept,
     /// 移进
     Shift(usize),
     /// 规约
@@ -47,26 +47,23 @@ impl Action {
     ) {
         // 构建ACTION表
         for item in &items.items {
-            if let Some(symbol) = item.production.right.get(item.location) {
-                // 移进 or 待约项
-                // 形如 A -> ε 的，直接规约就行
-                if item.is_move() {
-                    if let ProductionRight::Terminator(t) = symbol {
-                        graph.iter().find(|&p| p.0 == *symbol).map(|p| {
-                            self.0[i].insert(t.clone(), ActionType::Shift(p.1));
-                        });
-                    }
+            if item.is_move() {
+                let symbol = item.production.right[item.location];
+                if let ProductionRight::Terminator(t) = symbol {
+                    graph.iter().find(|&p| p.0 == symbol).map(|p| {
+                        self.0[i].insert(t.clone(), ActionType::Shift(p.1));
+                    });
                 }
-                // 规约项
-                else {
-                    if item.production.left == prods[0].left && item.next == TokenType::Eof {
-                        self.0[i].insert(item.next, ActionType::Accept(0));
-                    } else {
-                        for j in 0..prods.len() {
-                            if item.production == prods[j] {
-                                self.0[i].insert(item.next, ActionType::Reduce(j));
-                                break;
-                            }
+            }
+            // 规约项
+            else {
+                if item.production.left == prods[0].left && item.next == TokenType::Eof {
+                    self.0[i].insert(item.next, ActionType::Accept);
+                } else {
+                    for j in 0..prods.len() {
+                        if item.production == prods[j] {
+                            self.0[i].insert(item.next, ActionType::Reduce(j));
+                            break;
                         }
                     }
                 }

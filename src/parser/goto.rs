@@ -9,7 +9,7 @@ use super::{
 /// 行是项目集序号
 /// 列是非终结符
 #[derive(Debug)]
-pub(in crate::parser) struct Goto(Vec<HashMap<NonTerminator, Option<usize>>>);
+pub(in crate::parser) struct Goto(pub(crate) Vec<HashMap<NonTerminator, Option<usize>>>);
 impl Goto {
     /// 新建表
     pub(in crate::parser) fn new(cc: &CanonicalCollection) -> Self {

@@ -177,7 +177,7 @@
         ]
     },
     {
-        "left": "Bool",
+        "left": "Join",
         "right": [
             "Join",
             "&&",
@@ -185,7 +185,7 @@
         ]
     },
     {
-        "left": "Bool",
+        "left": "Join",
         "right": [
             "Equality"
         ]

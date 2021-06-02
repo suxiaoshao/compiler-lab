@@ -1,7 +1,7 @@
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct Position {
-    pub(in crate::tokenizer) x: u64,
-    pub(in crate::tokenizer) y: u64,
+    pub(in crate::tokenizer) x: usize,
+    pub(in crate::tokenizer) y: usize,
 }
 impl Position {
     pub(in crate::tokenizer) fn change_from_char(&mut self, c: char) -> () {
@@ -19,5 +19,8 @@ impl Position {
     }
     pub fn to_string(&self) -> String {
         format!("{}:{}", self.y, self.x)
+    }
+    pub fn new_(x: usize, y: usize) -> Self {
+        Self { x, y }
     }
 }

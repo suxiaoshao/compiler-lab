@@ -2,7 +2,7 @@ use crate::tokenizer::position::Position;
 use read_token_state::ReadTokenState;
 use token::Token;
 
-mod position;
+pub mod position;
 mod read_token_state;
 pub mod token;
 pub mod token_type;

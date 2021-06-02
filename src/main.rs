@@ -16,7 +16,7 @@ fn main() {
     tokens.iter().for_each(|x| {
         println!("{}", x.show_string());
     });
-    parser::parser(&parser_content);
+    parser::parser(&parser_content, &tokens);
     println!(
         "{:?}",
         SystemTime::now().duration_since(times).unwrap().as_millis()

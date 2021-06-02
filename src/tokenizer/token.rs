@@ -6,14 +6,14 @@ use crate::tokenizer::token_type::TokenType;
 #[derive(Clone, Debug)]
 pub struct Token {
     pub(in crate::tokenizer) lex: String,
-    pub(in crate::tokenizer) token_type: TokenType,
+    pub(in crate) token_type: TokenType,
     pub(in crate::tokenizer) start: Position,
     pub(in crate::tokenizer) end: Position,
 }
 
 impl Token {
     /// 新建一个 token
-    pub(in crate::tokenizer) fn new(
+    pub(in crate) fn new(
         lex: String,
         token_type: TokenType,
         start: &Position,

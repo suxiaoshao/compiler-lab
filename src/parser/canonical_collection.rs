@@ -54,6 +54,11 @@ impl CanonicalCollection {
                 action.update(items, graph, prods, i);
                 // 构建GOTO表
                 goto.update(graph, i);
+            } else {
+                // 构建ACTION表
+                action.update(items, &vec![], prods, i);
+                // 构建GOTO表
+                goto.update(&vec![], i);
             }
         }
         (action, goto)
