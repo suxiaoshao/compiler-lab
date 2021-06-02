@@ -63,11 +63,14 @@ impl Grammar {
         cc.item_sets.push(i0.clone());
         // 把新加入的有效项目集加入待扩展队列中
         shift_queue.push_back((i0.clone(), 0));
+        let all_token_type = TokenType::get_all_vec();
+        let all_non_ter_vec = NonTerminator::get_all_vec();
         while let Some(queue_item) = shift_queue.pop_front() {
             // 取出队首元素
             let (src, src_index) = queue_item.clone();
             // 遍历每个终结符
-            for token in TokenType::get_all_vec() {
+            for token in &all_token_type {
+                let token = *token;
                 let next_set = src.go(
                     ProductionRight::Terminator(token),
                     &self.first_set,
@@ -99,7 +102,8 @@ impl Grammar {
                 }
             }
             // 遍历每个非终结符
-            for token in NonTerminator::get_all_vec() {
+            for token in &all_non_ter_vec {
+                let token = *token;
                 let next_set = src.go(
                     ProductionRight::NonTerminator(token),
                     &self.first_set,
