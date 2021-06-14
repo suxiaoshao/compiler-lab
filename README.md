@@ -569,3 +569,9 @@ pub enum NonTerminator {
 ### 语法制导翻译（未完成）
 
 ### 中间代码生成（未完成）
+
+## 参考项目
+
+主要是参考 [qizong](https://github.com/qizong007) 写的 <https://github.com/Pikapika-sk/compiler-lab> (其实就是把他的 c++ 代码翻译了一下)
+
+还有就是 [qizong](https://github.com/qizong007) 推荐的这个项目 <https://github.com/khuqen/gramma_analysis>
