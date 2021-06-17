@@ -47,15 +47,6 @@
     {
         "left": "Type",
         "right": [
-            "Type",
-            "[",
-            "real_num",
-            "]"
-        ]
-    },
-    {
-        "left": "Type",
-        "right": [
             "int"
         ]
     },
@@ -144,15 +135,6 @@
             "Var",
             "[",
             "int_num",
-            "]"
-        ]
-    },
-    {
-        "left": "Var",
-        "right": [
-            "Var",
-            "[",
-            "real_num",
             "]"
         ]
     },
