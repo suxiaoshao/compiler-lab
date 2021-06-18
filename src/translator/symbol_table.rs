@@ -10,7 +10,36 @@ use std::collections::HashMap;
 /// 每进入一个块 (读入 { )，都要新增一个符号表用来存储该块内的变量信息
 ///
 /// 每退出一个块 (读入 } )，都要删除该块对应的符号表
-struct SymbolTable {
+#[derive(Clone, Debug)]
+pub(in crate::translator) struct SymbolTable {
     /// 通过变量名找到对应的变量
-    table: HashMap<String, Identifier>,
+    pub(in crate::translator) table: HashMap<String, Identifier>,
+}
+
+impl SymbolTable {
+    pub(in crate::translator) fn new() -> Self {
+        Self {
+            table: HashMap::new(),
+        }
+    }
+    /// 插入
+    pub(in crate::translator) fn insert(&mut self, key: String, value: Identifier) -> bool {
+        if self.table.contains_key(&key) {
+            false
+        } else {
+            self.table.insert(key, value);
+            true
+        }
+    }
+}
+
+pub(in crate::translator) trait Blocks {
+    /// 找到变量所在作用域（从近到远），返回scope
+    fn find_id_scope(&self, id_name: &str) -> Option<usize>;
+}
+
+impl Blocks for Vec<SymbolTable> {
+    fn find_id_scope(&self, id_name: &str) -> Option<usize> {
+        self.iter().position(|x| x.table.contains_key(id_name))
+    }
 }

@@ -66,6 +66,7 @@
         "left": "Stmts",
         "right": [
             "Stmts",
+            "M",
             "Stmt"
         ]
     },
@@ -91,6 +92,7 @@
             "(",
             "Bool",
             ")",
+            "M",
             "Stmt"
         ]
     },
@@ -101,8 +103,11 @@
             "(",
             "Bool",
             ")",
+            "M",
             "Stmt",
+            "Hn",
             "else",
+            "M",
             "Stmt"
         ]
     },
@@ -110,9 +115,11 @@
         "left": "Stmt",
         "right": [
             "while",
+            "M",
             "(",
             "Bool",
             ")",
+            "M",
             "Stmt"
         ]
     },
@@ -149,6 +156,7 @@
         "right": [
             "Bool",
             "||",
+            "M",
             "Join"
         ]
     },
@@ -163,6 +171,7 @@
         "right": [
             "Join",
             "&&",
+            "M",
             "Equality"
         ]
     },

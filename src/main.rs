@@ -17,10 +17,10 @@ fn main() {
     tokens.iter().for_each(|x| {
         println!("{}", x.show_string());
     });
-    let parser_items = parser::parser(&parser_content, &tokens);
-    translator::translator(&parser_items);
+    let (parser_items, productions) = parser::parser(&parser_content, &tokens);
+    translator::translator(&parser_items, &productions, &code_content);
     println!(
         "{:?}",
-        SystemTime::now().duration_since(times).unwrap().as_millis()
+        SystemTime::now().duration_since(times).unwrap().as_millis(),
     );
 }

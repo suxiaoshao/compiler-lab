@@ -21,9 +21,9 @@ mod lr1_item;
 mod lr1_item_set;
 mod non_terminator;
 pub mod parser_item;
-mod production;
+pub mod production;
 
-pub fn parser(parser_content: &str, tokens: &Vec<Token>) -> Vec<ParserItem> {
+pub fn parser(parser_content: &str, tokens: &Vec<Token>) -> (Vec<ParserItem>, Vec<Production>) {
     println!("解析 grammar 文件\n");
     let productions: Vec<Production> =
         serde_json::from_str(parser_content).expect("文法文件解析出错");
@@ -41,7 +41,10 @@ pub fn parser(parser_content: &str, tokens: &Vec<Token>) -> Vec<ParserItem> {
     println!("构造预测分析表");
     let (action, goto) = cc.build_predict_table(&grammar.productions);
     println!("语法分析（使用分析栈）");
-    syntax_parser(tokens, &action, &grammar.productions, &goto)
+    (
+        syntax_parser(tokens, &action, &grammar.productions, &goto),
+        grammar.productions,
+    )
 }
 /// 语法分析（使用分析栈）
 fn syntax_parser(

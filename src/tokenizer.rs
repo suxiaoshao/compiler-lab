@@ -1,6 +1,5 @@
 use crate::tokenizer::position::Position;
 use crate::tokenizer::token_type::TokenType;
-use colored::Colorize;
 use read_token_state::ReadTokenState;
 use token::Token;
 
@@ -42,13 +41,7 @@ pub fn get_tokens_from_string(content: &str) -> Vec<Token> {
         .iter()
         .find(|x| x.token_type == TokenType::Epsilon)
         .map(|x| {
-            let lines = content.split("\n").collect::<Vec<_>>();
-            println!("{}", lines[x.start.y - 1]);
-            println!(
-                "{}{}",
-                " ".repeat(x.start.x - 1),
-                format!("{} 未定义的 token", "^".repeat(x.end.x - x.start.x + 1)).red()
-            );
+            x.show_error("未定义的 token", content);
             std::process::exit(1)
         });
     tokens

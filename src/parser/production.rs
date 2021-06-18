@@ -9,7 +9,7 @@ use crate::tokenizer::token_type::TokenType;
 #[derive(Clone, Debug, Deserialize, Hash)]
 pub struct Production {
     pub(in crate::parser) left: NonTerminator,
-    pub(in crate::parser) right: Vec<ProductionRight>,
+    pub(in crate) right: Vec<ProductionRight>,
 }
 
 impl PartialEq for Production {
