@@ -3,6 +3,7 @@ use std::time::SystemTime;
 mod args_reader;
 mod parser;
 mod tokenizer;
+mod translator;
 
 /// 清空控制台
 fn clear() {
@@ -16,7 +17,8 @@ fn main() {
     tokens.iter().for_each(|x| {
         println!("{}", x.show_string());
     });
-    parser::parser(&parser_content, &tokens);
+    let parser_items = parser::parser(&parser_content, &tokens);
+    translator::translator(&parser_items);
     println!(
         "{:?}",
         SystemTime::now().duration_since(times).unwrap().as_millis()

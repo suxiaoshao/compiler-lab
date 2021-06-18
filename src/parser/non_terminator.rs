@@ -25,6 +25,8 @@ pub enum NonTerminator {
     Term,
     Unary,
     Factor,
+    Hn,
+    M,
 }
 impl NonTerminator {
     /// # 获取产生式左部为symbol的项目集
@@ -66,6 +68,8 @@ impl NonTerminator {
             NonTerminator::Term,
             NonTerminator::Unary,
             NonTerminator::Factor,
+            NonTerminator::Hn,
+            NonTerminator::M,
         ]
     }
 }

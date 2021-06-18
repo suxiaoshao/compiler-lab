@@ -11,6 +11,7 @@ use crate::tokenizer::token::Token;
 use crate::tokenizer::token_type::TokenType;
 
 use self::action::Action;
+use crate::parser::parser_item::{ParserItem, ParserType};
 
 mod action;
 mod canonical_collection;
@@ -19,9 +20,10 @@ mod grammar;
 mod lr1_item;
 mod lr1_item_set;
 mod non_terminator;
+pub mod parser_item;
 mod production;
 
-pub fn parser(parser_content: &str, tokens: &Vec<Token>) {
+pub fn parser(parser_content: &str, tokens: &Vec<Token>) -> Vec<ParserItem> {
     println!("解析 grammar 文件\n");
     let productions: Vec<Production> =
         serde_json::from_str(parser_content).expect("文法文件解析出错");
@@ -39,10 +41,16 @@ pub fn parser(parser_content: &str, tokens: &Vec<Token>) {
     println!("构造预测分析表");
     let (action, goto) = cc.build_predict_table(&grammar.productions);
     println!("语法分析（使用分析栈）");
-    syntax_parser(tokens, &action, &grammar.productions, &goto);
+    syntax_parser(tokens, &action, &grammar.productions, &goto)
 }
 /// 语法分析（使用分析栈）
-fn syntax_parser(tokens: &Vec<Token>, action: &Action, prods: &Vec<Production>, goto: &Goto) {
+fn syntax_parser(
+    tokens: &Vec<Token>,
+    action: &Action,
+    prods: &Vec<Production>,
+    goto: &Goto,
+) -> Vec<ParserItem> {
+    let mut parser_items = vec![];
     let token = Token::new(
         "$".to_string(),
         TokenType::Eof,
@@ -67,6 +75,9 @@ fn syntax_parser(tokens: &Vec<Token>, action: &Action, prods: &Vec<Production>, 
             }
             // 移进
             action::ActionType::Shift(e) => {
+                // 添加结果
+                parser_items.push(ParserItem::new(cur_token, ParserType::Shift));
+                // 压入状态、符号
                 a_stack.push_back((e, ProductionRight::Terminator(symbol)));
                 step += 1;
                 println!(
@@ -79,6 +90,8 @@ fn syntax_parser(tokens: &Vec<Token>, action: &Action, prods: &Vec<Production>, 
             }
             // 规约
             action::ActionType::Reduce(r_index) => {
+                // 添加结果
+                parser_items.push(ParserItem::new(cur_token, ParserType::Reduce(r_index)));
                 let p = &prods[r_index];
                 // 弹出产生式(除了A -> ε)
                 if let ProductionRight::Terminator(TokenType::Epsilon) = p.right[0] {
@@ -103,8 +116,9 @@ fn syntax_parser(tokens: &Vec<Token>, action: &Action, prods: &Vec<Production>, 
             }
             action::ActionType::Error => {
                 println!("{}", "error".red());
-                break;
+                std::process::exit(1);
             }
         }
     }
+    parser_items
 }

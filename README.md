@@ -464,7 +464,7 @@
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize, Hash)]
 pub enum TokenType {
     #[serde(rename = "ε")]
-    Epsilon = 0, // 未知类型
+    Epsilon, // 未知类型
     #[serde(rename = "int")]
     Int, // int
     #[serde(rename = "int_num")]
