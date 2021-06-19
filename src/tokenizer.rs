@@ -63,7 +63,7 @@ else{int elsee;elsee=3;}
 int intt = 44;
 real reall = 44.44;
 bool booll = true;
-a%b = $q
+a+b = $q
 else"##;
         let tokens = get_tokens_from_string(content);
         assert_eq!(60, tokens.len());

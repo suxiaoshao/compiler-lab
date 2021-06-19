@@ -38,7 +38,6 @@ impl DestValue {
 
 #[derive(Debug)]
 pub(in crate::translator) enum OptValue {
-    None,
     Jump,
     Assign,
     Equal,
@@ -52,12 +51,12 @@ pub(in crate::translator) enum OptValue {
     Mul,
     Div,
     Not,
+    End,
 }
 
 impl OptValue {
     fn show_string(&self) -> ColoredString {
         match self {
-            OptValue::None => "_",
             OptValue::Jump => "Jump",
             OptValue::Assign => "=",
             OptValue::Equal => "==",
@@ -71,6 +70,7 @@ impl OptValue {
             OptValue::Mul => "*",
             OptValue::Div => "/",
             OptValue::Not => "!",
+            &OptValue::End => "End",
         }
         .to_string()
         .cyan()
@@ -103,17 +103,10 @@ impl Quad {
             dest,
         }
     }
-    pub(in crate::translator) fn default() -> Self {
-        Self {
-            opt: OptValue::None,
-            lhs: DestValue::None,
-            rhs: DestValue::None,
-            dest: DestValue::None,
-        }
-    }
-    pub fn show_string(&self) {
+    pub fn show_string(&self, index: usize) {
         println!(
-            "<{},{},{},{}>",
+            "{} <{},{},{},{}>",
+            index + 1,
             self.opt.show_string(),
             self.lhs.show_string(),
             self.rhs.show_string(),

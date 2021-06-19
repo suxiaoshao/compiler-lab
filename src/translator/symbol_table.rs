@@ -1,4 +1,4 @@
-use crate::translator::identifier::Identifier;
+use crate::translator::identifier::{Identifier, IdentifierValue};
 use std::collections::HashMap;
 
 /// # 符号表
@@ -36,10 +36,18 @@ impl SymbolTable {
 pub(in crate::translator) trait Blocks {
     /// 找到变量所在作用域（从近到远），返回scope
     fn find_id_scope(&self, id_name: &str) -> Option<usize>;
+    fn set_value(&mut self, name: &str, value: IdentifierValue);
 }
 
 impl Blocks for Vec<SymbolTable> {
     fn find_id_scope(&self, id_name: &str) -> Option<usize> {
         self.iter().position(|x| x.table.contains_key(id_name))
+    }
+
+    fn set_value(&mut self, name: &str, value: IdentifierValue) {
+        self.iter_mut()
+            .enumerate()
+            .rfind(|(_, x)| x.table.contains_key(name))
+            .map(|(index, x)| x.insert(name.to_string(), Identifier::new(value, index as i32)));
     }
 }

@@ -22,7 +22,7 @@ fn back_patch(p_chain: &HashSet<usize>, num: usize, quads: &mut Vec<Quad>) {
 /// # 语法制导翻译核心
 ///
 ///输入：产生式序号
-fn syntax_directed(
+pub(in crate::translator) fn syntax_directed(
     no: usize,
     production: &Production,
     attr_stack: &mut LinkedList<Attribute>,
@@ -34,7 +34,7 @@ fn syntax_directed(
     tmp_idx: &mut i32,
 ) {
     let mut cur_sym_table = None;
-    if blocks.len() > 0 {
+    if blocks.len() != 0 {
         let len = blocks.len();
         cur_sym_table = Some(&mut blocks[len - 1]);
     }
@@ -60,7 +60,12 @@ fn syntax_directed(
         // Program : Block
         0 => {
             back_patch(&attr_cache[0].now_c, *quad_no, quads);
-            quads.push(Quad::default());
+            quads.push(Quad::new(
+                OptValue::End,
+                DestValue::None,
+                DestValue::None,
+                DestValue::None,
+            ));
             *quad_no += 1;
         }
         // Block : { Decls Stmts }
@@ -127,6 +132,7 @@ fn syntax_directed(
                     DestValue::Name(attr_cache[3].token.lex.clone()),
                 ));
                 *quad_no += 1;
+                blocks.set_value(&attr_cache[3].token.lex, attr_cache[1].value.unwrap());
             } else {
                 attr_cache[3].token.show_error(
                     &format!("Undefined variant: {}", &attr_cache[3].token.lex),
@@ -161,7 +167,7 @@ fn syntax_directed(
         // Stmt : while M ( Bool ) M Stmt
         14 => {
             back_patch(&attr_cache[0].now_c, attr_cache[5].next_instr, quads);
-            back_patch(&attr_cache[3].now_c, attr_cache[1].next_instr, quads);
+            back_patch(&attr_cache[3].true_c, attr_cache[1].next_instr, quads);
             res.now_c = attr_cache[3].false_c.clone();
             quads.push(Quad::new(
                 OptValue::Jump,
@@ -277,6 +283,13 @@ fn syntax_directed(
                 DestValue::None,
             ));
             *quad_no += 1;
+            quads.push(Quad::new(
+                OptValue::Jump,
+                DestValue::None,
+                DestValue::None,
+                DestValue::None,
+            ));
+            *quad_no += 1;
         }
         // Rel : Expr < Expr
         26 => {
@@ -307,7 +320,6 @@ fn syntax_directed(
                     std::process::exit(1)
                 }
             };
-            *quad_no += 1;
         }
         // Rel : Expr <= Expr
         27 => {
@@ -319,6 +331,7 @@ fn syntax_directed(
                 attr_cache[0].temp_id.clone(),
                 DestValue::TempId(*tmp_idx),
             ));
+            *quad_no += 1;
             match (&attr_cache[2].value, &attr_cache[0].value) {
                 (Some(IdentifierValue::Real(x)), Some(IdentifierValue::Real(y))) => {
                     res.value = Some(IdentifierValue::Bool(x <= y))
@@ -337,7 +350,6 @@ fn syntax_directed(
                     std::process::exit(1)
                 }
             };
-            *quad_no += 1;
         }
         // Rel : Expr >= Expr
         28 => {
@@ -349,6 +361,7 @@ fn syntax_directed(
                 attr_cache[0].temp_id.clone(),
                 DestValue::TempId(*tmp_idx),
             ));
+            *quad_no += 1;
             match (&attr_cache[2].value, &attr_cache[0].value) {
                 (Some(IdentifierValue::Real(x)), Some(IdentifierValue::Real(y))) => {
                     res.value = Some(IdentifierValue::Bool(x >= y))
@@ -367,7 +380,6 @@ fn syntax_directed(
                     std::process::exit(1)
                 }
             };
-            *quad_no += 1;
         }
         // Rel : Expr > Expr
         29 => {
@@ -379,6 +391,7 @@ fn syntax_directed(
                 attr_cache[0].temp_id.clone(),
                 DestValue::TempId(*tmp_idx),
             ));
+            *quad_no += 1;
             match (&attr_cache[2].value, &attr_cache[0].value) {
                 (Some(IdentifierValue::Real(x)), Some(IdentifierValue::Real(y))) => {
                     res.value = Some(IdentifierValue::Bool(x > y))
@@ -397,7 +410,6 @@ fn syntax_directed(
                     std::process::exit(1)
                 }
             };
-            *quad_no += 1;
         }
         // Rel : Expr
         30 | 36 | 39 => {
@@ -537,6 +549,7 @@ fn syntax_directed(
                 DestValue::None,
                 DestValue::TempId(*tmp_idx),
             ));
+            *quad_no += 1
         }
         // Unary : - Unary
         38 => {
@@ -562,6 +575,7 @@ fn syntax_directed(
                 DestValue::None,
                 DestValue::TempId(*tmp_idx),
             ));
+            *quad_no += 1
         }
         // Factor : ( Bool )
         40 => {

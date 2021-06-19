@@ -28,5 +28,19 @@ pub fn translator(parser_items: &Vec<ParserItem>, productions: &Vec<Production>,
             content,
         );
     }
-    quads.iter().for_each(|x| x.show_string())
+    syntax::syntax_directed(
+        0,
+        &productions[0],
+        &mut attr_stack,
+        &mut quad_no,
+        &mut quads,
+        &mut cur_scope,
+        &mut blocks,
+        content,
+        &mut tmp_idx,
+    );
+    quads
+        .iter()
+        .enumerate()
+        .for_each(|(index, x)| x.show_string(index))
 }
